@@ -1,21 +1,29 @@
-package com.travelagency.destinations.entity;
+package com.travelagency.destinations.entities.destination;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-public class Destination {
+@Entity
+@Table(name = "destination")
+public class DestinationEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String location;
-    private String description;
-    private List<Integer> ratings = new ArrayList<>();
-    private Double rating;
 
-    public Destination() {
+    private String name;
+
+    private String location;
+
+    private String description;
+
+    public DestinationEntity() {
     }
 
-    public Destination(Long id, String name, String location, String description) {
+    public DestinationEntity(Long id, String name, String location, String description) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -52,21 +60,5 @@ public class Destination {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Integer> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(List<Integer> ratings) {
-        this.ratings = ratings;
-    }
-
-    public Double getRating() {
-        return rating;
-    }
-
-    public void setRating(Double rating) {
-        this.rating = rating;
     }
 }

@@ -1,8 +1,7 @@
-package com.travelagency.destinations.controller;
+package com.travelagency.destinations.controllers.destination;
 
-import com.travelagency.destinations.dto.RatingRequest;
-import com.travelagency.destinations.entity.Destination;
-import com.travelagency.destinations.service.DestinationService;
+import com.travelagency.destinations.entities.destination.DestinationEntity;
+import com.travelagency.destinations.services.destination.DestinationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,38 +25,33 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @PostMapping
-    public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
-        return new ResponseEntity<>(destinationService.createDestination(destination), HttpStatus.CREATED);
+    public ResponseEntity<DestinationEntity> createDestination(@RequestBody DestinationEntity destinationEntity) {
+        return new ResponseEntity<>(destinationService.createDestination(destinationEntity), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Destination>> getAllDestinations() {
+    public ResponseEntity<List<DestinationEntity>> getAllDestinations() {
         return new ResponseEntity<>(destinationService.getAllDestinations(), HttpStatus.OK);
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<List<Destination>> getDestinationByName(@RequestParam String name) {
+    public ResponseEntity<List<DestinationEntity>> getDestinationByName(@RequestParam String name) {
         return new ResponseEntity<>(destinationService.getDestinationByName(name), HttpStatus.OK);
     }
 
     @GetMapping("/search/location")
-    public ResponseEntity<List<Destination>> getDestinationByLocation(@RequestParam String location) {
+    public ResponseEntity<List<DestinationEntity>> getDestinationByLocation(@RequestParam String location) {
         return new ResponseEntity<>(destinationService.getDestinationByLocation(location), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Destination> getDestinationById(@PathVariable Long id) {
+    public ResponseEntity<DestinationEntity> getDestinationById(@PathVariable Long id) {
         return new ResponseEntity<>(destinationService.getDestinationById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Destination> updateDestination(@PathVariable Long id, @RequestBody Destination destination) {
-        return new ResponseEntity<>(destinationService.updateDestination(id, destination), HttpStatus.OK);
-    }
-
-    @PostMapping("/{id}/ratings")
-    public ResponseEntity<Destination> addDestinationRating(@PathVariable Long id, @RequestBody RatingRequest request) {
-        return new ResponseEntity<>(destinationService.addDestinationRating(id, request.getRating()), HttpStatus.OK);
+    public ResponseEntity<DestinationEntity> updateDestination(@PathVariable Long id, @RequestBody DestinationEntity destinationEntity) {
+        return new ResponseEntity<>(destinationService.updateDestination(id, destinationEntity), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
