@@ -21,11 +21,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * Chamado pelo Spring Security a cada requisição autenticada.
-     * Busca o usuário no banco pelo username e devolve um UserDetails
-     * com a senha já hashada e a role mapeada (ex: "ADMIN" → ROLE_ADMIN).
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username)
@@ -38,10 +33,6 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    /**
-     * Registra um novo usuário persistindo no banco com a senha hashada via BCrypt.
-     * Nunca armazena a senha em texto puro.
-     */
     @Transactional
     public void registerUser(UserRequestDTO requestDTO) {
         UserEntity userEntity = new UserEntity();

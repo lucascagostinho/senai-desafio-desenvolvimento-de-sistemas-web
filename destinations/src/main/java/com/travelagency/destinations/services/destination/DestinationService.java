@@ -18,12 +18,9 @@ public class DestinationService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    // ReviewService injetado em vez do ReviewRepository — o cálculo do rating
-    // é responsabilidade do domínio de reviews, não do domínio de destinations
     @Autowired
     private ReviewService reviewService;
 
-    // Converte entidade + rating calculado via ReviewService para DTO de saída
     private DestinationDTO toDTO(DestinationEntity entity) {
         Double rating = reviewService.getAverageRatingByDestinationId(entity.getId());
         return new DestinationDTO(

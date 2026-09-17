@@ -22,7 +22,6 @@ public class ReviewService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    // Converte entidade para DTO de saída — expõe só id, rating e destinationId
     private ReviewDTO toDTO(ReviewEntity entity) {
         return new ReviewDTO(
                 entity.getId(),
@@ -31,14 +30,11 @@ public class ReviewService {
         );
     }
 
-    // Resolve o DestinationEntity a partir do destinationId recebido no DTO de entrada
     private DestinationEntity resolveDestination(Long destinationId) {
         return destinationRepository.findById(destinationId)
                 .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + destinationId));
     }
 
-    // Chamado pelo DestinationService para calcular a média de avaliações de um destino.
-    // Mantém a responsabilidade de acesso aos dados de review dentro do domínio de reviews.
     public Double getAverageRatingByDestinationId(Long destinationId) {
         return reviewRepository.findAverageRatingByDestinationId(destinationId);
     }
