@@ -44,11 +44,11 @@ com.travelagency.destinations
 │   ├── review/ReviewController.java
 │   └── user/UserController.java
 ├── dtos/
-│   ├── destination/DestinationDTO.java          ← saída
-│   ├── destination/DestinationRequestDTO.java   ← entrada
-│   ├── review/ReviewDTO.java                    ← saída
-│   ├── review/ReviewRequestDTO.java             ← entrada
-│   └── user/UserRequestDTO.java                 ← entrada
+│   ├── destination/DestinationDTO.java          
+│   ├── destination/DestinationRequestDTO.java   
+│   ├── review/ReviewDTO.java                    
+│   ├── review/ReviewRequestDTO.java             
+│   └── user/UserRequestDTO.java                 
 ├── entities/
 │   ├── destination/DestinationEntity.java
 │   ├── review/ReviewEntity.java
@@ -91,21 +91,21 @@ A API usa **HTTP Basic Authentication**. O cliente envia `usuario:senha` codific
 
 ### Regras de acesso por endpoint
 
-| Endpoint | Acesso |
-|---|---|
-| `POST /users/register` | Público (sem autenticação) |
-| `GET /destinations/**` | Público (sem autenticação) |
-| `POST /destinations` | Somente role `ADMIN` |
-| `PUT /destinations/{id}` | Somente role `ADMIN` |
-| `DELETE /destinations/{id}` | Somente role `ADMIN` |
+| Endpoint                         | Acesso                       |
+| -------------------------------- | ---------------------------- |
+| `POST /users/register`           | Público (sem autenticação)   |
+| `GET /destinations/**`           | Público (sem autenticação)   |
+| `POST /destinations`             | Somente role `ADMIN`         |
+| `PUT /destinations/{id}`         | Somente role `ADMIN`         |
+| `DELETE /destinations/{id}`      | Somente role `ADMIN`         |
 | `/reviews/**` (todos os métodos) | Qualquer usuário autenticado |
 
 ### Roles disponíveis
 
-| Role | Descrição |
-|---|---|
+| Role    | Descrição                                            |
+| ------- | ---------------------------------------------------- |
 | `ADMIN` | Acesso total — pode criar, editar e excluir destinos |
-| `USER` | Acesso às reviews e leitura de destinos |
+| `USER`  | Acesso às reviews e leitura de destinos              |
 
 > **Nota:** o campo `role` é enviado em maiúsculas (`ADMIN`, `USER`). O Spring Security adiciona o prefixo `ROLE_` internamente.
 
@@ -179,6 +179,7 @@ Diferente da versão anterior, os dados agora são persistidos no banco PostgreS
 POST http://localhost:8080/users/register
 (sem autenticação)
 ```
+
 ```json
 {
   "username": "admin",
@@ -193,6 +194,7 @@ POST http://localhost:8080/users/register
 POST http://localhost:8080/users/register
 (sem autenticação)
 ```
+
 ```json
 {
   "username": "usuario",
@@ -207,6 +209,7 @@ POST http://localhost:8080/users/register
 POST http://localhost:8080/destinations
 Authorization: Basic Auth → admin / 123456
 ```
+
 ```json
 {
   "name": "Foz do Iguaçu",
@@ -228,6 +231,7 @@ GET http://localhost:8080/destinations
 POST http://localhost:8080/reviews
 Authorization: Basic Auth → usuario / 123456
 ```
+
 ```json
 {
   "rating": 5,
@@ -257,6 +261,7 @@ Base URL: `http://localhost:8080`
 `POST /users/register` — **Público**
 
 **Corpo da requisição:**
+
 ```json
 {
   "username": "admin",
@@ -276,6 +281,7 @@ Base URL: `http://localhost:8080`
 `POST /destinations` — **Requer role ADMIN**
 
 **Corpo da requisição:**
+
 ```json
 {
   "name": "Foz do Iguaçu",
@@ -285,6 +291,7 @@ Base URL: `http://localhost:8080`
 ```
 
 **Resposta — `201 Created`:**
+
 ```json
 {
   "id": 1,
@@ -295,7 +302,7 @@ Base URL: `http://localhost:8080`
 }
 ```
 
-> **Atenção:** `rating` é `null` quando o destino ainda não possui nenhuma avaliação — a média de zero elementos é indefinida. Após a primeira review, o campo passa a retornar a média calculada. Clientes que consomem este campo devem tratar o caso `null`.
+> `rating` é `null` quando o destino ainda não possui nenhuma avaliação.
 
 ---
 
@@ -304,6 +311,7 @@ Base URL: `http://localhost:8080`
 `GET /destinations` — **Público**
 
 **Resposta — `200 OK`:**
+
 ```json
 [
   {
@@ -330,6 +338,7 @@ Base URL: `http://localhost:8080`
 `GET /destinations/{id}` — **Público**
 
 **Resposta — `200 OK`:**
+
 ```json
 {
   "id": 1,
@@ -351,6 +360,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 **Exemplo:** `GET /destinations/search/name?name=foz`
 
 **Resposta — `200 OK`:**
+
 ```json
 [
   {
@@ -374,6 +384,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 **Exemplo:** `GET /destinations/search/location?location=paraná`
 
 **Resposta — `200 OK`:**
+
 ```json
 [
   {
@@ -393,6 +404,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 `PUT /destinations/{id}` — **Requer role ADMIN**
 
 **Corpo da requisição:**
+
 ```json
 {
   "name": "Foz do Iguaçu",
@@ -402,6 +414,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 ```
 
 **Resposta — `200 OK`:**
+
 ```json
 {
   "id": 1,
@@ -429,6 +442,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 `POST /reviews` — **Requer autenticação**
 
 **Corpo da requisição:**
+
 ```json
 {
   "rating": 5,
@@ -437,6 +451,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 ```
 
 **Resposta — `201 Created`:**
+
 ```json
 {
   "id": 1,
@@ -452,6 +467,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 `GET /reviews` — **Requer autenticação**
 
 **Resposta — `200 OK`:**
+
 ```json
 [
   {
@@ -474,6 +490,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 `GET /reviews/{id}` — **Requer autenticação**
 
 **Resposta — `200 OK`:**
+
 ```json
 {
   "id": 1,
@@ -491,6 +508,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 **Exemplo:** `GET /reviews/search/destination?id=1`
 
 **Resposta — `200 OK`:**
+
 ```json
 [
   {
@@ -513,6 +531,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 `PUT /reviews/{id}` — **Requer autenticação**
 
 **Corpo da requisição:**
+
 ```json
 {
   "rating": 4,
@@ -521,6 +540,7 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 ```
 
 **Resposta — `200 OK`:**
+
 ```json
 {
   "id": 1,
@@ -541,19 +561,19 @@ Busca parcial, sem distinção de maiúsculas/minúsculas.
 
 ## 9. Resumo dos endpoints
 
-| Método | Endpoint | Ação | Acesso |
-|---|---|---|---|
-| `POST` | `/users/register` | Registrar usuário | Público |
-| `POST` | `/destinations` | Criar destino | ADMIN |
-| `GET` | `/destinations` | Listar destinos | Público |
-| `GET` | `/destinations/{id}` | Buscar por ID | Público |
-| `GET` | `/destinations/search/name?name=` | Buscar por nome | Público |
-| `GET` | `/destinations/search/location?location=` | Buscar por localização | Público |
-| `PUT` | `/destinations/{id}` | Atualizar destino | ADMIN |
-| `DELETE` | `/destinations/{id}` | Excluir destino | ADMIN |
-| `POST` | `/reviews` | Criar review | Autenticado |
-| `GET` | `/reviews` | Listar reviews | Autenticado |
-| `GET` | `/reviews/{id}` | Buscar review por ID | Autenticado |
-| `GET` | `/reviews/search/destination?id=` | Buscar reviews por destino | Autenticado |
-| `PUT` | `/reviews/{id}` | Atualizar review | Autenticado |
-| `DELETE` | `/reviews/{id}` | Excluir review | Autenticado |
+| Método   | Endpoint                                  | Ação                       | Acesso      |
+| -------- | ----------------------------------------- | -------------------------- | ----------- |
+| `POST`   | `/users/register`                         | Registrar usuário          | Público     |
+| `POST`   | `/destinations`                           | Criar destino              | ADMIN       |
+| `GET`    | `/destinations`                           | Listar destinos            | Público     |
+| `GET`    | `/destinations/{id}`                      | Buscar por ID              | Público     |
+| `GET`    | `/destinations/search/name?name=`         | Buscar por nome            | Público     |
+| `GET`    | `/destinations/search/location?location=` | Buscar por localização     | Público     |
+| `PUT`    | `/destinations/{id}`                      | Atualizar destino          | ADMIN       |
+| `DELETE` | `/destinations/{id}`                      | Excluir destino            | ADMIN       |
+| `POST`   | `/reviews`                                | Criar review               | Autenticado |
+| `GET`    | `/reviews`                                | Listar reviews             | Autenticado |
+| `GET`    | `/reviews/{id}`                           | Buscar review por ID       | Autenticado |
+| `GET`    | `/reviews/search/destination?id=`         | Buscar reviews por destino | Autenticado |
+| `PUT`    | `/reviews/{id}`                           | Atualizar review           | Autenticado |
+| `DELETE` | `/reviews/{id}`                           | Excluir review             | Autenticado |
