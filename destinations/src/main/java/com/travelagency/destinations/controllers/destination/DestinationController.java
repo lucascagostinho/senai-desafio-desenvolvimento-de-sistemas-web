@@ -1,6 +1,7 @@
 package com.travelagency.destinations.controllers.destination;
 
-import com.travelagency.destinations.entities.destination.DestinationEntity;
+import com.travelagency.destinations.dtos.destination.DestinationDTO;
+import com.travelagency.destinations.dtos.destination.DestinationRequestDTO;
 import com.travelagency.destinations.services.destination.DestinationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,33 +26,33 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @PostMapping
-    public ResponseEntity<DestinationEntity> createDestination(@RequestBody DestinationEntity destinationEntity) {
-        return new ResponseEntity<>(destinationService.createDestination(destinationEntity), HttpStatus.CREATED);
+    public ResponseEntity<DestinationDTO> createDestination(@RequestBody DestinationRequestDTO requestDTO) {
+        return new ResponseEntity<>(destinationService.createDestination(requestDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<DestinationEntity>> getAllDestinations() {
+    public ResponseEntity<List<DestinationDTO>> getAllDestinations() {
         return new ResponseEntity<>(destinationService.getAllDestinations(), HttpStatus.OK);
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<List<DestinationEntity>> getDestinationByName(@RequestParam String name) {
+    public ResponseEntity<List<DestinationDTO>> getDestinationByName(@RequestParam String name) {
         return new ResponseEntity<>(destinationService.getDestinationByName(name), HttpStatus.OK);
     }
 
     @GetMapping("/search/location")
-    public ResponseEntity<List<DestinationEntity>> getDestinationByLocation(@RequestParam String location) {
+    public ResponseEntity<List<DestinationDTO>> getDestinationByLocation(@RequestParam String location) {
         return new ResponseEntity<>(destinationService.getDestinationByLocation(location), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DestinationEntity> getDestinationById(@PathVariable Long id) {
+    public ResponseEntity<DestinationDTO> getDestinationById(@PathVariable Long id) {
         return new ResponseEntity<>(destinationService.getDestinationById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DestinationEntity> updateDestination(@PathVariable Long id, @RequestBody DestinationEntity destinationEntity) {
-        return new ResponseEntity<>(destinationService.updateDestination(id, destinationEntity), HttpStatus.OK);
+    public ResponseEntity<DestinationDTO> updateDestination(@PathVariable Long id, @RequestBody DestinationRequestDTO requestDTO) {
+        return new ResponseEntity<>(destinationService.updateDestination(id, requestDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

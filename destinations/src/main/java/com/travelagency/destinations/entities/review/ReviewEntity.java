@@ -21,7 +21,7 @@ public class ReviewEntity {
     private Integer rating;
 
     @ManyToOne
-    @JoinColumn(name = "destination")
+    @JoinColumn(name = "destination_id")
     private DestinationEntity destination;
 
     public ReviewEntity() {

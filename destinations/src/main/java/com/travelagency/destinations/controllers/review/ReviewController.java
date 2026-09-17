@@ -1,11 +1,11 @@
 package com.travelagency.destinations.controllers.review;
 
-import com.travelagency.destinations.entities.review.ReviewEntity;
+import com.travelagency.destinations.dtos.review.ReviewDTO;
+import com.travelagency.destinations.dtos.review.ReviewRequestDTO;
 import com.travelagency.destinations.services.review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,33 +21,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
-    
+
     @Autowired
     private ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<ReviewEntity> createReview(@RequestBody ReviewEntity reviewEntity) {
-        return new ResponseEntity<>(reviewService.createReview(reviewEntity), HttpStatus.CREATED);
+    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewRequestDTO requestDTO) {
+        return new ResponseEntity<>(reviewService.createReview(requestDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReviewEntity>> getAllReviews() {
+    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
         return new ResponseEntity<>(reviewService.getAllReviews(), HttpStatus.OK);
     }
 
     @GetMapping("/search/destination")
-    public ResponseEntity<List<ReviewEntity>> getAllReviewsByDestinationId(@RequestParam Long id) {
+    public ResponseEntity<List<ReviewDTO>> getAllReviewsByDestinationId(@RequestParam Long id) {
         return new ResponseEntity<>(reviewService.getAllByDestinationId(id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewEntity> getReviewById(@PathVariable Long id) {
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
         return new ResponseEntity<>(reviewService.getReviewById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewEntity> updateReview(@PathVariable Long id, @RequestBody ReviewEntity reviewEntity) {
-        return new ResponseEntity<>(reviewService.updateReview(id, reviewEntity), HttpStatus.OK);
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody ReviewRequestDTO requestDTO) {
+        return new ResponseEntity<>(reviewService.updateReview(id, requestDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

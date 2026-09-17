@@ -1,7 +1,12 @@
 package com.travelagency.destinations.services.destination;
 
+import com.travelagency.destinations.dtos.destination.DestinationDTO;
+import com.travelagency.destinations.dtos.destination.DestinationRequestDTO;
 import com.travelagency.destinations.entities.destination.DestinationEntity;
 import com.travelagency.destinations.repositories.destination.DestinationRepository;
+import com.travelagency.destinations.services.review.ReviewService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,34 +18,72 @@ public class DestinationService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    public DestinationEntity createDestination(DestinationEntity destinationEntity) {
-        return destinationRepository.save(destinationEntity);
+    // ReviewService injetado em vez do ReviewRepository — o cálculo do rating
+    // é responsabilidade do domínio de reviews, não do domínio de destinations
+    @Autowired
+    private ReviewService reviewService;
+
+    // Converte entidade + rating calculado via ReviewService para DTO de saída
+    private DestinationDTO toDTO(DestinationEntity entity) {
+        Double rating = reviewService.getAverageRatingByDestinationId(entity.getId());
+        return new DestinationDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getLocation(),
+                entity.getDescription(),
+                rating
+        );
     }
 
-    public List<DestinationEntity> getAllDestinations() {
-        return destinationRepository.findAll();
+    @Transactional
+    public DestinationDTO createDestination(DestinationRequestDTO requestDTO) {
+        DestinationEntity entity = new DestinationEntity();
+        entity.setName(requestDTO.getName());
+        entity.setLocation(requestDTO.getLocation());
+        entity.setDescription(requestDTO.getDescription());
+        DestinationEntity saved = destinationRepository.save(entity);
+        return toDTO(saved);
     }
 
-    public DestinationEntity getDestinationById(Long id) {
-        return destinationRepository.getReferenceById(id);
+    public List<DestinationDTO> getAllDestinations() {
+        return destinationRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
-    public List<DestinationEntity> getDestinationByName(String name) {
-        return destinationRepository.findAllByNameContainingIgnoreCase(name);
+    public DestinationDTO getDestinationById(Long id) {
+        DestinationEntity entity = destinationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + id));
+        return toDTO(entity);
     }
 
-    public List<DestinationEntity> getDestinationByLocation(String location) {
-        return destinationRepository.findAllByLocationContainingIgnoreCase(location);
+    public List<DestinationDTO> getDestinationByName(String name) {
+        return destinationRepository.findAllByNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
-    public DestinationEntity updateDestination(Long id, DestinationEntity updatedData) {
-        DestinationEntity destinationEntity = destinationRepository.getReferenceById(id);
-        destinationEntity.setName(updatedData.getName());
-        destinationEntity.setLocation(updatedData.getLocation());
-        destinationEntity.setDescription(updatedData.getDescription());
-        return destinationRepository.save(destinationEntity);
+    public List<DestinationDTO> getDestinationByLocation(String location) {
+        return destinationRepository.findAllByLocationContainingIgnoreCase(location)
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
+    @Transactional
+    public DestinationDTO updateDestination(Long id, DestinationRequestDTO requestDTO) {
+        DestinationEntity entity = destinationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Destination not found with id: " + id));
+        entity.setName(requestDTO.getName());
+        entity.setLocation(requestDTO.getLocation());
+        entity.setDescription(requestDTO.getDescription());
+        DestinationEntity saved = destinationRepository.save(entity);
+        return toDTO(saved);
+    }
+
+    @Transactional
     public void deleteDestination(Long id) {
         destinationRepository.deleteById(id);
     }
